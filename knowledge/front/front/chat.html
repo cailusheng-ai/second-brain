@@ -365,7 +365,7 @@
 
  <script>
     // ================= 核心配置 =================
-    const API_BASE = `${location.protocol}//${location.host}`.includes('http') ? `${location.protocol}//${location.host}` : 'http://127.0.0.1:8001';
+    const API_BASE = ''; // 空=同源相对路径，自动跟随当前域名（勿写死 localhost）
     const chatEl = document.getElementById('chat');
     const inputEl = document.getElementById('input');
     const sendBtn = document.getElementById('send');
