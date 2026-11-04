@@ -46,9 +46,13 @@ class SparseSearchNode(BaseNode):
             _OUTPUT_FIELDS,
         )
 
+        # 分数拦截：过滤无关键词重叠的噪声（分数 <= 0 不召回）
         sparse_chunks = []
         for hit in (search_result or []):
+            distance = hit.get("distance", 0)
+            if distance <= 0:
+                continue
             entity = hit.get("entity", {})
-            sparse_chunks.append({**entity, "_sparse_distance": hit.get("distance", 0)})
+            sparse_chunks.append({**entity, "_sparse_distance": distance})
 
         return {"sparse_chunks": sparse_chunks}

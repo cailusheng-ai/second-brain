@@ -315,11 +315,11 @@ class RRFNode(BaseNode):
             f"计算加权 RRF 分数 (k: dense/sparse/web={self.config.rrf_k})",
         )
 
-        # 三路权重设计：dense / sparse / web 均为主通路，权重平级
+        # 三路权重设计：web 加权，避免被本地双路（dense+sparse 重叠）翻倍分数挤掉
         source_weights = {
             "dense":  1.0,
             "sparse": 1.0,
-            "web":    1.0,
+            "web":    1.5,
         }
 
         # 三路统一 k 值：结果较多，k 大→平滑噪声、防头部垄断

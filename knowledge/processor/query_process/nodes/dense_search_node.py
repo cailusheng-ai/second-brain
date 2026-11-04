@@ -44,9 +44,15 @@ class DenseSearchNode(BaseNode):
             _OUTPUT_FIELDS,
         )
 
+        # 分数拦截：过滤低相似度 chunk（余弦相似度 < 阈值的不召回）
+        min_score = float(os.getenv("MILVUS_MIN_COSINE_SCORE", "0.6"))
+
         dense_chunks = []
         for hit in (search_result or []):
+            distance = hit.get("distance", 0)
+            if distance < min_score:
+                continue
             entity = hit.get("entity", {})
-            dense_chunks.append({**entity, "_dense_distance": hit.get("distance", 0)})
+            dense_chunks.append({**entity, "_dense_distance": distance})
 
         return {"dense_chunks": dense_chunks}
